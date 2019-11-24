@@ -6,10 +6,10 @@
 
 ZSL results (MCA, %) on the dataset of CUB-200-2011 using the deep features of VGG19.
 
-|    Method     | Origin | Ours |
-| :-----------: | :----: | :--: |
-| SS-BE-Learned | 59.32  |      |
-| SS-AE-Learned |        |      |
+|    Method     | Origin |   Ours    |
+| :-----------: | :----: | :-------: |
+| SS-BE-Learned | 59.32  | **62.29** |
+| SS-AE-Learned |        |           |
 
 
 ### Reference
