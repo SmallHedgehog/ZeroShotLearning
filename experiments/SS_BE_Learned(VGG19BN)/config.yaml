@@ -1,0 +1,26 @@
+DATA_PATH: /data/ycf/data/CUB_200_2011
+CHECKPOINTS_PATH: ../checkpoints
+
+SEED: 2024
+
+TRAIN:
+  max_epochs: 20
+  batch_size: 48
+  num_workers: 4
+
+  backbone: vgg19bn # value in (vgg19 or vgg19bn)
+  unseens: 50
+
+  # For optimizer
+  lr: 0.0001
+  momentum: 0.9
+  weight_decay: 5e-4
+
+  # For triplet loss
+  margin: 1.0
+
+  # Hyper-parameters of the paper
+  num_attributes: 312
+  augmented: False
+  num_scales: 1
+  pretrained: True
