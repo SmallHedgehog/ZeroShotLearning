@@ -14,7 +14,7 @@ from terminaltables import AsciiTable
 from easydict import EasyDict
 from dataset import CUB_200_2011
 from utils import Logger
-from models import LFNet, L2Norm
+from models import LFNet, L2Norm, Normlize
 from loss import SoftmaxLoss, TripletLoss
 from eval import evaluate
 
@@ -24,7 +24,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = GPU_ID
 
 def parser_args():
     parser = argparse.ArgumentParser('(FG)ZeroShotLearning-Latent features learning')
-    parser.add_argument('--config', type=str, default='../experiments/SS_BE_Learned(VGG19)/config.yaml')
+    parser.add_argument('--config', type=str, default='../experiments/SS_AE_Learned(VGG19)_NORM/config.yaml')
     args = parser.parse_args()
     with open(args.config) as file:
         config = EasyDict(yaml.safe_load(file))
@@ -83,12 +83,18 @@ if __name__ == '__main__':
     unseen_class_attributes = L2Norm.L2(valSet.get_class_attributes.cuda())
 
     # Optimizer
-    # optimizer = torch.optim.SGD(
-    #     model.parameters(),
-    #     lr=float(config.TRAIN.lr),
-    #     momentum=config.TRAIN.momentum,
-    #     weight_decay=float(config.TRAIN.weight_decay))
-    optimizer = torch.optim.Adam(model.parameters(), lr=float(config.TRAIN.lr))
+    optimizer = torch.optim.SGD(
+        model.parameters(),
+        lr=float(config.TRAIN.lr),
+        momentum=config.TRAIN.momentum,
+        weight_decay=float(config.TRAIN.weight_decay))
+    # optimizer = torch.optim.Adam(model.parameters(), lr=float(config.TRAIN.lr))
+
+    # Scheduler
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer=optimizer,
+        T_max=config.TRAIN.max_epochs
+    )
 
     # Softmax loss
     softmax_loss = SoftmaxLoss()
@@ -179,3 +185,5 @@ if __name__ == '__main__':
                 'ACCURACY': BEST_accuracy
             }
             torch.save(infos, osp.join(config.CHECKPOINTS_PATH, 'LFNet.pth'))
+
+        scheduler.step()

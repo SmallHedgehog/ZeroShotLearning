@@ -12,7 +12,7 @@ TRAIN:
   unseens: 50
 
   # For optimizer
-  lr: 0.0001
+  lr: 0.001
   momentum: 0.9
   weight_decay: 5e-4
 
@@ -21,6 +21,6 @@ TRAIN:
 
   # Hyper-parameters of the paper
   num_attributes: 312
-  augmented: False
+  augmented: True
   num_scales: 1
   pretrained: True
