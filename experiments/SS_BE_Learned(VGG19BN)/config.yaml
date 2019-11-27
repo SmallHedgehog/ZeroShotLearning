@@ -25,3 +25,6 @@ TRAIN:
   augmented: False
   num_scales: 1
   pretrained: True
+
+VAL:
+  evaluate: 'ua'

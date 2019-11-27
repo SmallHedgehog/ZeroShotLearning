@@ -24,7 +24,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = GPU_ID
 
 def parser_args():
     parser = argparse.ArgumentParser('(FG)ZeroShotLearning-Latent features learning')
-    parser.add_argument('--config', type=str, default='../experiments/SS_AE_Learned(VGG19)_NORM/config.yaml')
+    parser.add_argument('--config', type=str, default='../experiments/SS_AE_Learned(VGG19)_LA/config.yaml')
     args = parser.parse_args()
     with open(args.config) as file:
         config = EasyDict(yaml.safe_load(file))
@@ -156,11 +156,12 @@ if __name__ == '__main__':
         # Evaluation
         val_loss, val_accuracy = evaluate(
             model=model,
+            trainLoader=trainLoader,
             valLoader=valLoader,
             loss_func=loss_func,
+            seen_class_attris=seen_class_attributes,
             unseen_class_attris=unseen_class_attributes,
             config=config,
-            eval_type='ua'
         )
 
         logger.list_of_scalars_summary([(key, val_loss[key]) for key in val_loss.keys()], epoch, 'val_loss')
