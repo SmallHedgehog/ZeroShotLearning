@@ -13,7 +13,7 @@ import _init_path
 from terminaltables import AsciiTable
 from easydict import EasyDict
 from dataset import CUB_200_2011
-from utils import Logger
+from utils import Logger, get_optimizer
 from models import LFNet, L2Norm, Normlize
 from loss import SoftmaxLoss, TripletLoss
 from eval import evaluate
@@ -83,12 +83,7 @@ if __name__ == '__main__':
     unseen_class_attributes = L2Norm.L2(valSet.get_class_attributes.cuda())
 
     # Optimizer
-    optimizer = torch.optim.SGD(
-        model.parameters(),
-        lr=float(config.TRAIN.lr),
-        momentum=config.TRAIN.momentum,
-        weight_decay=float(config.TRAIN.weight_decay))
-    # optimizer = torch.optim.Adam(model.parameters(), lr=float(config.TRAIN.lr))
+    optimizer = get_optimizer(model, config)
 
     # Scheduler
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
