@@ -4,6 +4,7 @@ import torch
 from sklearn.linear_model import Ridge
 
 from utils import MCA
+from models import Normlize
 
 __all__ = ['evaluate']
 
@@ -57,7 +58,7 @@ def evaluate(model, trainLoader, valLoader, loss_func, seen_class_attris, unseen
             elif config.VAL.evaluate == 'la':
                 pred_attris = pred_attris[0]    # Note that this implement only one scale.
                 _evaluate(pred_attris[:, config.TRAIN.num_attributes:], unseen_class_latent_attris, targets,
-                          mean_class_accuracy)
+                          mean_class_accuracy, _type='la')
             else:
                 raise NotImplementedError
 
@@ -78,7 +79,9 @@ def evaluate(model, trainLoader, valLoader, loss_func, seen_class_attris, unseen
     return loss_metrics, mca_metrics
 
 
-def _evaluate(pred_attris, unseen_class_attris, targets, MCA):
+def _evaluate(pred_attris, unseen_class_attris, targets, MCA, _type='ua'):
+    if _type == 'la':
+        pred_attris = Normlize.norm(pred_attris)
     pred = torch.mm(pred_attris, unseen_class_attris.t())
     pred = pred.max(dim=1)[1]
     MCA.update(targets.squeeze().cpu().numpy(), pred.cpu().numpy())
