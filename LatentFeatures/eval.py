@@ -43,10 +43,10 @@ def evaluate(model, trainLoader, valLoader, loss_func, seen_class_attris, unseen
             losses = [loss_func(attris[:, :config.TRAIN.num_attributes], attris[:, config.TRAIN.num_attributes:],
                                 targets, unseen_class_attris) for attris in pred_attris]
 
-            ua_loss = losses[0][0]
+            ua_loss = losses[0][ 0]
             la_loss = losses[0][-1]
             for loss_idx in range(1, len(losses)):
-                ua_loss += losses[loss_idx][0]
+                ua_loss += losses[loss_idx][ 0]
                 la_loss += losses[loss_idx][-1]
             loss = ua_loss + la_loss
 
